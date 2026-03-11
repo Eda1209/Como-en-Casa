@@ -78,7 +78,6 @@
     </div>
 
     <script>
-        // CONFIGURACIÓN FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyAER8_0CqDM9YGIXWc27yPQTnbjEtdPX8g",
             authDomain: "como-en-casa-web.firebaseapp.com",
@@ -113,7 +112,6 @@
                 return;
             }
 
-            // Crear objeto reserva
             const nuevaReserva = {
                 id: Date.now(),
                 nombre: nombre,
@@ -124,17 +122,23 @@
                 timestamp: firebase.database.ServerValue.TIMESTAMP
             };
 
-            // Guardar en Firebase
             dbRef.ref('reservas').push(nuevaReserva).then(() => {
-                alert("¡Reserva confirmada! Te esperamos.");
-                window.location.href = "index.html";
+                dbRef.ref('config/wa').once('value', (snapshot) => {
+                    const waNumber = snapshot.val() || "";
+                    const mensaje = `Hola, quiero confirmar una reserva:%0A%0A*Nombre:* ${nombre}%0A*Teléfono:* ${tel}%0A*Personas:* ${numPersonas}%0A*Fecha:* ${fecha}%0A*Hora:* ${hora}`;
+                    
+                    alert("¡Reserva guardada! Serás redirigido a WhatsApp para confirmar.");
+                    if(waNumber) {
+                        window.open(`https://wa.me/${waNumber.replace(/\s/g, '')}?text=${mensaje}`, '_blank');
+                    }
+                    window.location.href = "index.html";
+                });
             }).catch(error => {
                 console.error("Error al reservar:", error);
                 alert("Hubo un problema. Por favor, llámanos directamente.");
             });
         }
 
-        // Bloquear fechas pasadas en el calendario
         document.getElementById('res-fecha').min = new Date().toISOString().split("T")[0];
     </script>
 </body>
