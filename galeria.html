@@ -12,8 +12,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body { background-color: #050505; color: #fff; font-family: 'Poppins', sans-serif; }
-        .gal-card { aspect-ratio: 1/1; overflow: hidden; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); background-color: #111; }
-        .gal-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; background-color: #fff; }
+        .gal-card { aspect-ratio: 1/1; overflow: hidden; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); background-color: #222; display: flex; align-items: center; justify-content: center; }
+        .gal-card img { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
 <body class="p-6">
@@ -29,7 +29,6 @@
     </div>
 
     <script>
-        // CONFIGURACIÓN FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyAER8_0CqDM9YGIXWc27yPQTnbjEtdPX8g",
             authDomain: "como-en-casa-web.firebaseapp.com",
@@ -42,17 +41,9 @@
         firebase.initializeApp(firebaseConfig);
         const dbRef = firebase.database();
 
-        const clean = (t) => { 
-            if(!t) return "";
-            const d = document.createElement('div'); 
-            d.textContent = t; 
-            return d.innerHTML; 
-        };
-
         function cargarGaleria() {
             const container = document.getElementById('grid-galeria');
 
-            // Escuchar cambios en el nodo 'galeria' de Firebase
             dbRef.ref('galeria').on('value', (snapshot) => {
                 const data = snapshot.val();
                 
@@ -61,18 +52,16 @@
                     return;
                 }
 
-                // Convertimos el objeto de Firebase en un array para recorrerlo
                 const fotos = Object.values(data);
 
                 container.innerHTML = fotos.map(f => `
                     <div class="gal-card">
-                        <img src="${clean(f.url)}" onerror="this.src='https://via.placeholder.com/400?text=Error+Imagen'">
+                        ${f.url ? `<img src="${f.url}" onload="console.log('Imagen cargada: ${f.url}')" onerror="this.parentElement.innerHTML='<span class=\'text-[8px] p-2 text-center\'>Error al cargar URL: ${f.url.substring(0,20)}...</span>'">` : '<span class="text-[8px]">Sin URL</span>'}
                     </div>
                 `).join('');
             });
         }
 
-        // Iniciar la carga al abrir la página
         window.onload = cargarGaleria;
     </script>
 </body>
