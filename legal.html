@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com;">
+    <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none';">
     <title>Información Legal | Como en Casa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -11,33 +13,30 @@
         h2 { color: #ea580c; font-weight: bold; text-transform: uppercase; margin-top: 2rem; margin-bottom: 0.5rem; }
         .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
         strong { color: #fff; }
-        .no-select { user-select: none; }
-        
-        /* Técnica de protección: Invierte el texto en el código pero lo muestra normal */
-        .proteccion-datos { unicode-bidi: bidi-override; direction: rtl; text-align: left; }
+        /* Protección avanzada contra copiado */
+        .secure-data { user-select: none; -webkit-user-select: none; unicode-bidi: bidi-override; direction: rtl; display: inline-block; }
     </style>
 </head>
-<body>
+<body oncopy="return false" oncut="return false" onpaste="return false">
     <div class="container">
         <a href="index.html" rel="noopener" class="text-orange-600 font-bold hover:underline">← Volver al inicio</a>
         
         <h1 class="text-4xl font-black italic text-white mb-10 mt-6 uppercase tracking-tighter">INFORMACIÓN <span class="text-orange-600">LEGAL.</span></h1>
 
-        <section class="mb-10 no-select">
+        <section class="mb-10">
             <h2>1. Aviso Legal</h2>
             <p>En cumplimiento de la Ley 34/2002 de Servicios de la Sociedad de la Información, le informamos que el titular de este sitio web es:</p>
-            <ul class="mt-4 space-y-2 bg-white/5 p-6 rounded-2xl border border-white/10">
+            <ul class="mt-4 space-y-2 bg-white/5 p-6 rounded-2xl border border-white/10 select-none">
                 <li><strong>Nombre del Titular:</strong> Eduardo González López</li>
-                <li><strong>NIF/CIF:</strong> <span class="proteccion-datos">A78322861</span></li>
-                <li><strong>Domicilio Social:</strong> Av. Primero de Mayo ,14 ,35002, Las Palmas de Gran Canaria, Las Palmas</li>
-                <li><strong>Email de Contacto:</strong> <span class="text-orange-600 proteccion-datos">moc.liamg@90zepolade</span></li>
+                <li><strong>NIF/CIF:</strong> <span class="secure-data">16822387A</span></li>
+                <li><strong>Domicilio Social:</strong> Av. Primero de Mayo, 14, 35002, Las Palmas de Gran Canaria</li>
+                <li><strong>Email de Contacto:</strong> <span class="text-orange-600 secure-data">moc.liamg@90zepolade</span></li>
             </ul>
         </section>
 
         <section class="mb-10">
             <h2>2. Política de Privacidad</h2>
             <p>De acuerdo con el Reglamento (UE) 2016/679 (RGPD), los datos personales que el usuario facilite a través de formularios o reservas serán tratados por <strong>Como en Casa</strong> únicamente con el fin de gestionar su solicitud. Implementamos medidas técnicas para evitar el acceso no autorizado a sus datos.</p>
-            <p class="mt-2 text-sm italic">Usted puede ejercer sus derechos de acceso y supresión enviando un correo al contacto arriba indicado.</p>
         </section>
 
         <section class="mb-10">
