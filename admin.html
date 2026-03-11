@@ -144,7 +144,7 @@
     </div>
 
     <script>
-        const CLAVE_B64 = "MTIwOTcw"; // "120970"
+        const CLAVE_B64 = "MTIwOTcw"; 
         const firebaseConfig = {
             apiKey: "AIzaSyAER8_0CqDM9YGIXWc27yPQTnbjEtdPX8g",
             authDomain: "como-en-casa-web.firebaseapp.com",
@@ -183,11 +183,22 @@
             dbRef.ref('db').on('value', s => { localDB = s.val() || []; renderDB(); });
             dbRef.ref('menu_s').on('value', s => { localMenuS = s.val() || { items: [] }; loadMenuConfig(); });
             dbRef.ref('galeria').on('value', s => { renderGaleria(s.val() || []); });
-            dbRef.ref('reservas').on('value', s => { renderReservas(s.val() || []); });
+            
+            // LIMPIEZA AUTOMÁTICA DE RESERVAS DE MÁS DE 20 MINUTOS
+            dbRef.ref('reservas').on('value', s => {
+                const reservas = s.val() || {};
+                const ahora = Date.now();
+                Object.entries(reservas).forEach(([key, r]) => {
+                    if (r.id && (ahora - r.id > 20 * 60 * 1000)) {
+                        dbRef.ref('reservas/' + key).remove();
+                    }
+                });
+                renderReservas(reservas);
+            });
+
             dbRef.ref('config').on('value', s => { loadGeneralConfig(s.val() || {}); });
         }
 
-        // CATEGORÍAS
         function renderCatOptions() {
             document.getElementById('p-cat').innerHTML = localCats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
             updatePriceInputs();
@@ -217,7 +228,6 @@
             }
         }
 
-        // CARTA
         function updatePriceInputs() {
             const cat = document.getElementById('p-cat').value;
             const area = document.getElementById('price-area');
@@ -253,7 +263,6 @@
             dbRef.ref('db').set(newDB);
         }
 
-        // MENÚ SEMANAL
         function renderMenuOrganized() {
             const container = document.getElementById('ms-selector-organized');
             container.innerHTML = "";
@@ -280,7 +289,6 @@
             alert("Menú Semanal actualizado");
         }
 
-        // GALERÍA
         function addFoto() {
             const url = document.getElementById('gal-url').value;
             if(!url) return;
@@ -293,7 +301,6 @@
         }
         function deleteFoto(key) { dbRef.ref('galeria/' + key).remove(); }
 
-        // RESERVAS
         function renderReservas(reservas) {
             const container = document.getElementById('render-reservas');
             const list = Object.entries(reservas);
@@ -301,7 +308,6 @@
         }
         function delRes(key) { dbRef.ref('reservas/' + key).remove(); }
 
-        // CONFIGURACIÓN GENERAL
         function loadGeneralConfig(c) {
             document.getElementById('h-open').value = c.o || '';
             document.getElementById('h-close').value = c.c || '';
@@ -315,7 +321,6 @@
         }
 
         function saveGeneral() {
-            // MEJORA SEGURA: Filtramos etiquetas HTML pero permitimos símbolos de URL de Google Maps
             const safeMap = (url) => url ? url.replace(/[<>]/g, "").trim() : "";
 
             dbRef.ref('config').set({
